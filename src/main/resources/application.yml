@@ -1,0 +1,34 @@
+logging:
+  level:
+    de:
+      mmenze: DEBUG
+
+
+spring:
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://remotemysql.com:3306/oS4MQQTPg7
+    username: oS4MQQTPg7
+    password: g2Dg0jue3e
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      maximum-pool-size: 3
+      max-lifetime: 1200000
+  liquibase:
+    contexts: prod
+    change-log: classpath:db/master.xml
+  thymeleaf:
+    cache: true
+
+application:
+  corona:
+    johns-hopkins:
+      csv-base-url: "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
+    zeit:
+      json-url: "https://interactive.zeit.de/cronjobs/2020/corona/data.json"

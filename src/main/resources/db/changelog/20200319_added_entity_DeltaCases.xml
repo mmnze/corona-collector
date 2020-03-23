@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="autoIncrement" value="true"/>
+
+    <changeSet id="20200319-3" author="mmenze">
+        <createTable tableName="delta_cases">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="increase_confirmed_1d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="increase_confirmed_7d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="increase_confirmed_14d" type="integer">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="increase_deaths_1d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="increase_deaths_7d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="increase_deaths_14d" type="integer">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="increase_recovered_1d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="increase_recovered_7d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="increase_recovered_14d" type="integer">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="delta_active_1d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="delta_active_7d" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="delta_active_14d" type="integer">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="doubling_rate" type="double">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="base_date" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="region_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
