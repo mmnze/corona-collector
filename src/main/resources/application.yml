@@ -12,9 +12,6 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://remotemysql.com:3306/oS4MQQTPg7
-    username: oS4MQQTPg7
-    password: g2Dg0jue3e
     hikari:
       poolName: Hikari
       auto-commit: false

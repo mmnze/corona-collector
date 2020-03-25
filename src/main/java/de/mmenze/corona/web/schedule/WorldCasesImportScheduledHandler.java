@@ -58,10 +58,16 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
             Reader reader = new InputStreamReader(url.openStream());
             CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.withFirstRecordAsHeader());
 
+            // change in format
+            String countryRegion = "Country/Region";
+            if (date.isAfter(LocalDate.of(2020, 03, 21))) {
+                countryRegion = "Country_Region";
+            }
+
             // combine regions to countries
             List<CSVRecord> records = parser.getRecords();
             for (CSVRecord record : records) {
-                String region = record.get("Country/Region");
+                String region = record.get(countryRegion);
                 int confirmed = getIntegerFrom(record.get("Confirmed"));
                 int deaths = getIntegerFrom(record.get("Deaths"));
                 int recovered = getIntegerFrom(record.get("Recovered"));
@@ -86,7 +92,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
                     regionRepository.save(region);
                 }
 
-                if (!existsCasesFor(LocalDate.now(), region)) {
+                if (!existsCasesFor(date, region)) {
                     Cases cases = e.getValue();
                     cases.setRegion(region);
                     cases.setDate(date);
@@ -120,7 +126,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         countryName = countryName.replace("Republic of Korea", "South Korean");
         countryName = countryName.replace("Korea, South", "South Korean");
         countryName = countryName.replace("South Korea", "South Korean");
-        countryName = countryName.replace("Koreann", "South Korean");
+        countryName = countryName.replace("South Koreann", "South Korean");
         countryName = countryName.replace("occupied Palestinian territory", "Israel");
         countryName = countryName.replace("Palestine", "Israel");
         countryName = countryName.replace("Republic of Moldova", "Moldova");
@@ -145,6 +151,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         countryName = countryName.replace("North Ireland", "United Kingdom");
         countryName = countryName.replace("North Macedonia", "Macedonia");
         countryName = countryName.replace("Cape Verde", "Cabo Verde");
+        countryName = countryName.replace("Syria", "Syrian");
 
         countryName = countryName.trim();
         return countryName;

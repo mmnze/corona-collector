@@ -23,7 +23,7 @@ public abstract class BaseCasesImporter {
 
 
     protected boolean existsCasesFor(LocalDate date, Region region) {
-        Cases cases = casesRepository.getByDateAndRegion(LocalDate.now(), region);
+        Cases cases = casesRepository.getByDateAndRegion(date, region);
         if (cases != null) {
             log.debug("cases already in DB: {}, {}", date, region.getName());
             return  true;

@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Slf4j
 @Component
 public class CountriesOfTheWorldImportScheduledHandler {
@@ -28,7 +30,8 @@ public class CountriesOfTheWorldImportScheduledHandler {
         ResponseEntity<String> response = restTemplate.getForEntity("https://restcountries.eu/rest/v2/all", String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
-        for (Region region : regionRepository.findAll()) {
+        List<Region> regions = regionRepository.findAll();
+        for (Region region : regions) {
             // ignore the countries we've already worked on
             if (region.getPopulation() != 0) {
                 continue;
@@ -59,6 +62,7 @@ public class CountriesOfTheWorldImportScheduledHandler {
                 log.warn("region '{}' not found in REST reply", region.getName());
             }
         }
+        log.debug("Current number of regions in DB: {}", regions.size());
         log.debug("Done importing country data");
     }
 
