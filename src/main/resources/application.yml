@@ -3,7 +3,6 @@ logging:
     de:
       mmenze: DEBUG
 
-
 spring:
   devtools:
     restart:
@@ -15,7 +14,7 @@ spring:
     hikari:
       poolName: Hikari
       auto-commit: false
-      maximum-pool-size: 3
+      maximum-pool-size: 2
       max-lifetime: 1200000
   liquibase:
     contexts: prod
@@ -28,4 +27,6 @@ application:
     johns-hopkins:
       csv-base-url: "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
     zeit:
-      json-url: "https://interactive.zeit.de/cronjobs/2020/corona/data.json"
+      states-url: "https://interactive.zeit.de/cronjobs/2020/corona/bundeslaender-current.json"
+      district-current-url: "https://interactive.zeit.de/cronjobs/2020/corona/kreise-current.json"
+      district-history-url: "https://interactive.zeit.de/cronjobs/2020/corona/kreise-chronology.json"

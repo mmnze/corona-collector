@@ -2,6 +2,7 @@ package de.mmenze.corona.web.schedule;
 
 import de.mmenze.corona.domain.Cases;
 import de.mmenze.corona.domain.Region;
+import de.mmenze.corona.domain.enums.RegionType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -49,7 +50,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
 
     private void importData(LocalDate date) {
         log.debug("Starting to import world cases for date {}", date);
-        Map<String, Region> mappedRegions = regionRepository.getAllMappedRegions();
+        Map<String, Region> mappedRegions = regionRepository.getAllMappedRegionsByRegionType(RegionType.COUNTRY);
         Map<String, Cases> mappedCases = new HashMap<>();
 
         try {
@@ -152,6 +153,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         countryName = countryName.replace("North Macedonia", "Macedonia");
         countryName = countryName.replace("Cape Verde", "Cabo Verde");
         countryName = countryName.replace("Syria", "Syrian");
+        countryName = countryName.replace("Diamond Princess", "Others");
 
         countryName = countryName.trim();
         return countryName;

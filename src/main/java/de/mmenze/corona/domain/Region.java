@@ -1,5 +1,6 @@
 package de.mmenze.corona.domain;
 
+import de.mmenze.corona.domain.enums.RegionType;
 import lombok.Data;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -37,5 +38,9 @@ public class Region {
     @Column(name = "continent", nullable = false)
     private String continent;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(name = "region_type", nullable = false)
+    private RegionType regionType;
 
 }

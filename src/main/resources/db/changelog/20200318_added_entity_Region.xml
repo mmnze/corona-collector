@@ -39,5 +39,12 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="20200327-1" author="mmenze">
+        <addColumn tableName="region">
+            <column name="region_type" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>
