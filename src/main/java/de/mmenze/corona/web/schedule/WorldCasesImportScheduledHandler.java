@@ -50,7 +50,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
 
     private void importData(LocalDate date) {
         log.debug("Starting to import world cases for date {}", date);
-        Map<String, Region> mappedRegions = regionRepository.getAllMappedRegionsByRegionType(RegionType.COUNTRY);
+        Map<String, Region> mappedRegions = regionRepository.getAllRegionsByRegionTypeMappedByName(RegionType.COUNTRY);
         Map<String, Cases> mappedCases = new HashMap<>();
 
         try {
@@ -90,6 +90,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
                 if (region == null) {
                     region = new Region();
                     region.setName(e.getKey());
+                    region.setRegionType(RegionType.COUNTRY);
                     regionRepository.save(region);
                 }
 
@@ -154,6 +155,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         countryName = countryName.replace("Cape Verde", "Cabo Verde");
         countryName = countryName.replace("Syria", "Syrian");
         countryName = countryName.replace("Diamond Princess", "Others");
+        countryName = countryName.replace("West Bank and Gaza", "Israel");
 
         countryName = countryName.trim();
         return countryName;

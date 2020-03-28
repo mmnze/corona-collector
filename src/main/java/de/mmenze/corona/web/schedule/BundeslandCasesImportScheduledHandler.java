@@ -19,7 +19,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
 
 
@@ -30,7 +29,7 @@ import java.util.Map;
 @Component
 public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
 
-    @Value("${application.corona.zeit.json-url:none}")
+    @Value("${application.corona.zeit.states-url:none}")
     private String zeitBundeslandJsonUrl;
     @Autowired
     private RegionRepository regionRepository;
@@ -48,7 +47,7 @@ public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
         ResponseEntity<String> response = restTemplate.getForEntity(zeitBundeslandJsonUrl, String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
-        Map<String, Region> mappedRegions = regionRepository.getAllMappedRegionsByRegionType(RegionType.STATE);
+        Map<String, Region> mappedRegions = regionRepository.getAllRegionsByRegionTypeMappedByName(RegionType.STATE);
         String changeTimestamp = root.get("lastUpdate").asText();
         changeTimestamp = changeTimestamp.substring(0, 10);
         LocalDate date = LocalDate.parse(changeTimestamp, DATE_FORMAT);

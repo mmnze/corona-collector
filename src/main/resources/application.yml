@@ -28,5 +28,4 @@ application:
       csv-base-url: "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_daily_reports/"
     zeit:
       states-url: "https://interactive.zeit.de/cronjobs/2020/corona/bundeslaender-current.json"
-      district-current-url: "https://interactive.zeit.de/cronjobs/2020/corona/kreise-current.json"
-      district-history-url: "https://interactive.zeit.de/cronjobs/2020/corona/kreise-chronology.json"
+      district-url: "https://interactive.zeit.de/cronjobs/2020/corona/kreise-chronology.json"

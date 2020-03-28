@@ -29,50 +29,48 @@ import java.util.Map;
 @Component
 public class DistrictCasesImportScheduledHandler extends BaseCasesImporter {
 
-    @Value("${application.corona.zeit.states-url:none}")
-    private String zeitBundeslandJsonUrl;
+    @Value("${application.corona.zeit.disctrict-url:none}")
+    private String zeitDistrictJsonUrl;
     @Autowired
     private RegionRepository regionRepository;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    @Scheduled(cron = "0 45 23 * * *")
+    @Scheduled(cron = "0 55 23 * * *")
     public void importBundeslandData() throws JsonProcessingException {
-        log.debug("Starting importing Bundesland cases data");
-
+        log.debug("Starting importing district cases data");
         ObjectMapper mapper = new ObjectMapper();
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(HttpClientBuilder.create().build());
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
-        ResponseEntity<String> response = restTemplate.getForEntity(zeitBundeslandJsonUrl, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(zeitDistrictJsonUrl, String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
-        Map<String, Region> mappedRegions = regionRepository.getAllMappedRegionsByRegionType(RegionType.STATE);
-        String changeTimestamp = root.get("lastUpdate").asText();
-        changeTimestamp = changeTimestamp.substring(0, 10);
-        LocalDate date = LocalDate.parse(changeTimestamp, DATE_FORMAT);
+        LocalDate startDate = LocalDate.parse(root.get("firstDate").asText());
+        Map<String, Region> mappedRegions = regionRepository.getAllRegionsByRegionTypeMappedByCode(RegionType.DISTRICT);
 
-        for (JsonNode bundesland : root.get("states")) {
-            String name =  bundesland.get("state").asText();
-            Region region = mappedRegions.get(name);
+        for (JsonNode district : root.get("kreise")) {
+            String code =  district.get("ags").asText();
+            Region region = mappedRegions.get(code);
             if (region == null) {
-                region = new Region();
-                region.setName(name);
-                regionRepository.save(region);
+                // all districts are pre-loaded, hence issue a warning if not found
+                log.warn("District not found! {}", code);
+                continue;
             }
 
-
-            if (!existsCasesFor(date, region)) {
-                Cases cases = new Cases();
-                cases.setRegion(region);
-                cases.setDate(date);
-                cases.setConfirmed(bundesland.get("count").asInt());
-                cases.setDeaths(bundesland.get("dead").asInt());
-                cases.setRecovered(bundesland.get("recovered").asInt());
-                completeCasesAndDeltaCases(cases, date, region);
+            LocalDate date = startDate;
+            for (JsonNode count : district.get("counts")) {
+                if (!existsCasesFor(date, region)) {
+                    Cases cases = new Cases();
+                    cases.setRegion(region);
+                    cases.setDate(date);
+                    cases.setConfirmed(count.asInt());
+                    completeCasesAndDeltaCases(cases, date, region);
+                }
+                date = date.plusDays(1);
             }
         }
-        log.debug("Done importing Bundesland data");
+        log.debug("Done importing district data");
     }
 
 }
