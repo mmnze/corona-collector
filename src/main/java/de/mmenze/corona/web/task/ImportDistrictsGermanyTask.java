@@ -1,4 +1,4 @@
-package de.mmenze.corona.task;
+package de.mmenze.corona.web.task;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

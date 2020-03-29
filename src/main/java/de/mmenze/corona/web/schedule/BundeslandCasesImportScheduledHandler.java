@@ -37,7 +37,7 @@ public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    @Scheduled(cron = "0 45 23 * * *")
+    @Scheduled(cron = "0 45 22 * * *")
     public void importBundeslandData() throws JsonProcessingException {
         log.debug("Starting importing Bundesland cases data");
 

@@ -156,6 +156,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         countryName = countryName.replace("Syria", "Syrian");
         countryName = countryName.replace("Diamond Princess", "Others");
         countryName = countryName.replace("West Bank and Gaza", "Israel");
+        countryName = countryName.replace("MS Zaandam", "Others");
 
         countryName = countryName.trim();
         return countryName;

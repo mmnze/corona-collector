@@ -1,6 +1,7 @@
 package de.mmenze.corona.web;
 
 import de.mmenze.corona.web.schedule.BundeslandCasesImportScheduledHandler;
+import de.mmenze.corona.web.schedule.DistrictCasesImportScheduledHandler;
 import de.mmenze.corona.web.schedule.WorldCasesImportScheduledHandler;
 import de.mmenze.corona.web.schedule.CountriesOfTheWorldImportScheduledHandler;
 import de.mmenze.corona.web.service.SendMailService;
@@ -10,6 +11,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class CoronaController {
+
+    @Autowired
+    private DistrictCasesImportScheduledHandler districtCasesImportScheduledHandler;
+
+    @GetMapping("/api/import/districts")
+    public void importDistrics() throws Exception {
+        districtCasesImportScheduledHandler.importDistrictData();
+    }
+
+    @GetMapping("/api/import/districts/history")
+    public void importHistoryDistrics() throws Exception {
+        districtCasesImportScheduledHandler.importDistrictData(true);
+    }
+
+
 
     @Autowired
     private WorldCasesImportScheduledHandler coronaHandler;
