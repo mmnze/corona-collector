@@ -29,22 +29,22 @@ import java.util.Map;
 @Component
 public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
 
-    @Value("${application.corona.zeit.states-url:none}")
-    private String zeitBundeslandJsonUrl;
+    @Value("${application.corona.zeit.germany-url:none}")
+    private String zeitGermanyJsonUrl;
     @Autowired
     private RegionRepository regionRepository;
 
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    @Scheduled(cron = "0 45 22 * * *")
+    @Scheduled(cron = "0 45 23 * * *")
     public void importBundeslandData() throws JsonProcessingException {
         log.debug("Starting importing Bundesland cases data");
 
         ObjectMapper mapper = new ObjectMapper();
         HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(HttpClientBuilder.create().build());
         RestTemplate restTemplate = new RestTemplate(clientHttpRequestFactory);
-        ResponseEntity<String> response = restTemplate.getForEntity(zeitBundeslandJsonUrl, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(zeitGermanyJsonUrl, String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
         Map<String, Region> mappedRegions = regionRepository.getAllByRegionTypeMappedByName(RegionType.STATE);
@@ -52,8 +52,8 @@ public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
         changeTimestamp = changeTimestamp.substring(0, 10);
         LocalDate date = LocalDate.parse(changeTimestamp, DATE_FORMAT);
 
-        for (JsonNode bundesland : root.get("states")) {
-            String name =  bundesland.get("state").asText();
+        for (JsonNode bundesland : root.get("states").get("items")) {
+            String name =  bundesland.get("name").asText();
             Region region = mappedRegions.get(name);
             if (region == null) {
                 region = new Region();
@@ -66,9 +66,9 @@ public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
                 Cases cases = new Cases();
                 cases.setRegion(region);
                 cases.setDate(date);
-                cases.setConfirmed(bundesland.get("count").asInt());
-                cases.setDeaths(bundesland.get("dead").asInt());
-                cases.setRecovered(bundesland.get("recovered").asInt());
+                cases.setConfirmed(bundesland.get("currentStats").get("count").asInt());
+                cases.setDeaths(bundesland.get("currentStats").get("dead").asInt());
+                cases.setRecovered(bundesland.get("currentStats").get("recovered").asInt());
                 completeCasesAndDeltaCases(cases, date, region);
             }
         }
