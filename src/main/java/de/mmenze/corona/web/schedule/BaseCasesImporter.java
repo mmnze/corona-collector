@@ -23,7 +23,7 @@ public abstract class BaseCasesImporter {
 
 
     protected boolean existsCasesFor(LocalDate date, Region region) {
-        Cases cases = casesRepository.getByDateAndRegion(date, region);
+        Cases cases = casesRepository.findByDateAndRegion(date, region);
         if (cases != null) {
             log.debug("cases already in DB: {}, {}", date, region.getName());
             return  true;
@@ -32,7 +32,7 @@ public abstract class BaseCasesImporter {
     }
 
     protected Cases getCasesForDateNotNull(LocalDate date, Region region) {
-        Cases cases = casesRepository.getByDateAndRegion(date, region);
+        Cases cases = casesRepository.findByDateAndRegion(date, region);
         if (cases == null) {
             cases = new Cases();
         }
@@ -73,13 +73,23 @@ public abstract class BaseCasesImporter {
         }
     }
 
-    protected void addDeltaCases(LocalDate date, Region region, Cases cases, Cases yesterdayCases) {
-        Cases cases7d = getCasesForDateNotNull(date.minusDays(7), region);
-        Cases cases14d = getCasesForDateNotNull(date.minusDays(7), region);
+    protected void updateDeltaCases(Cases cases, DeltaCases deltaCases) {
+        Cases yesterdayCases = getCasesForDateNotNull(cases.getDate().minusDays(1), cases.getRegion());
+        calculateDeltaCases(deltaCases, cases, yesterdayCases);
+    }
 
+    protected void addDeltaCases(LocalDate date, Region region, Cases cases, Cases yesterdayCases) {
         DeltaCases deltaCases = new DeltaCases();
         deltaCases.setRegion(region);
         deltaCases.setBaseDate(date);
+        calculateDeltaCases(deltaCases, cases, yesterdayCases);
+    }
+
+    private void calculateDeltaCases(DeltaCases deltaCases, Cases cases, Cases yesterdayCases) {
+        Region region = deltaCases.getRegion();
+        LocalDate date = deltaCases.getBaseDate();
+        Cases cases7d = getCasesForDateNotNull(date.minusDays(7), region);
+        Cases cases14d = getCasesForDateNotNull(date.minusDays(7), region);
 
         deltaCases.setIncreaseConfirmed1d(cases.getConfirmed() - yesterdayCases.getConfirmed());
         deltaCases.setIncreaseConfirmed7d(cases.getConfirmed() - cases7d.getConfirmed());

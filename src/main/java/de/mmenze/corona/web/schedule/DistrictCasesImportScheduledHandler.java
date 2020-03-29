@@ -61,7 +61,7 @@ public class DistrictCasesImportScheduledHandler extends BaseCasesImporter {
             changeTimestamp = changeTimestamp.substring(0, 10);
             startDate = LocalDate.parse(changeTimestamp, DATE_FORMAT);
         }
-        Map<String, Region> mappedRegions = regionRepository.getAllRegionsByRegionTypeMappedByCode(RegionType.DISTRICT);
+        Map<String, Region> mappedRegions = regionRepository.getAllByRegionTypeMappedByCode(RegionType.DISTRICT);
 
         for (JsonNode district : root.get("kreise")) {
             String code =  district.get("ags").asText();

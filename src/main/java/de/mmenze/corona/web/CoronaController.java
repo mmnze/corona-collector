@@ -1,5 +1,8 @@
 package de.mmenze.corona.web;
 
+import de.mmenze.corona.domain.Cases;
+import de.mmenze.corona.domain.enums.RegionType;
+import de.mmenze.corona.repository.CasesRepository;
 import de.mmenze.corona.web.schedule.BundeslandCasesImportScheduledHandler;
 import de.mmenze.corona.web.schedule.DistrictCasesImportScheduledHandler;
 import de.mmenze.corona.web.schedule.WorldCasesImportScheduledHandler;
@@ -8,6 +11,9 @@ import de.mmenze.corona.web.service.SendMailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 @Controller
 public class CoronaController {
@@ -31,7 +37,7 @@ public class CoronaController {
     private WorldCasesImportScheduledHandler coronaHandler;
 
     @GetMapping("/api/import/world")
-    public void importCsvs() {
+    public void importCsvs() throws Exception {
         coronaHandler.importAllWorldDataCsv();
     }
 

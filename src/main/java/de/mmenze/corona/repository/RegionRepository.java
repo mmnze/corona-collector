@@ -17,13 +17,13 @@ public interface RegionRepository extends JpaRepository<Region, Long> {
 
     List<Region> findAllByRegionType(RegionType regionType);
 
-    default Map<String, Region> getAllRegionsByRegionTypeMappedByName(RegionType regionType) {
+    default Map<String, Region> getAllByRegionTypeMappedByName(RegionType regionType) {
         Map<String, Region> mappedRegions = new HashMap<>();
         findAllByRegionType(regionType).forEach(e -> mappedRegions.put(e.getName(), e));
         return mappedRegions;
     }
 
-    default Map<String, Region> getAllRegionsByRegionTypeMappedByCode(RegionType regionType) {
+    default Map<String, Region> getAllByRegionTypeMappedByCode(RegionType regionType) {
         Map<String, Region> mappedRegions = new HashMap<>();
         findAllByRegionType(regionType).forEach(e -> mappedRegions.put(e.getCode(), e));
         return mappedRegions;

@@ -47,7 +47,7 @@ public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
         ResponseEntity<String> response = restTemplate.getForEntity(zeitBundeslandJsonUrl, String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
-        Map<String, Region> mappedRegions = regionRepository.getAllRegionsByRegionTypeMappedByName(RegionType.STATE);
+        Map<String, Region> mappedRegions = regionRepository.getAllByRegionTypeMappedByName(RegionType.STATE);
         String changeTimestamp = root.get("lastUpdate").asText();
         changeTimestamp = changeTimestamp.substring(0, 10);
         LocalDate date = LocalDate.parse(changeTimestamp, DATE_FORMAT);
