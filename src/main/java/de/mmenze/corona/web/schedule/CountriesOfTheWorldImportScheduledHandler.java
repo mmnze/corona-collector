@@ -22,7 +22,7 @@ public class CountriesOfTheWorldImportScheduledHandler {
     private RegionRepository regionRepository;
 
 
-    @Scheduled(cron = "0 0 5 * * *")
+    @Scheduled(cron = "0 0 1 * * *")
     public void importCountryData() throws JsonProcessingException {
         log.debug("Starting importing country data");
         RestTemplate restTemplate = new RestTemplate();

@@ -39,7 +39,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         }
     }
 
-    @Scheduled(cron = "0 0 4 * * *")
+    @Scheduled(cron = "0 45 0 * * *")
     public void importLastWorldDataCsv()throws Exception  {
         importData(LocalDate.now().minusDays(1));
     }

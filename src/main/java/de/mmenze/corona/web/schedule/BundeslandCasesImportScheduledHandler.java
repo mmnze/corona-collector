@@ -37,7 +37,7 @@ public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    @Scheduled(cron = "0 45 23 * * *")
+    @Scheduled(cron = "0 15 0 * * *")
     public void importBundeslandData() throws JsonProcessingException {
         log.debug("Starting importing Bundesland cases data");
 
@@ -48,9 +48,7 @@ public class BundeslandCasesImportScheduledHandler extends BaseCasesImporter {
         JsonNode root = mapper.readTree(response.getBody());
 
         Map<String, Region> mappedRegions = regionRepository.getAllByRegionTypeMappedByName(RegionType.STATE);
-        String changeTimestamp = root.get("lastUpdate").asText();
-        changeTimestamp = changeTimestamp.substring(0, 10);
-        LocalDate date = LocalDate.parse(changeTimestamp, DATE_FORMAT);
+        LocalDate date = LocalDate.now().minusDays(1);
 
         for (JsonNode bundesland : root.get("states").get("items")) {
             String name =  bundesland.get("name").asText();

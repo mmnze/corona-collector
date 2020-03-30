@@ -37,7 +37,7 @@ public class DistrictCasesImportScheduledHandler extends BaseCasesImporter {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 
-    @Scheduled(cron = "0 55 23 * * *")
+    @Scheduled(cron = "0 30 0 * * *")
     public void importDistrictData() throws JsonProcessingException {
         importDistrictData(false);
     }
@@ -54,9 +54,7 @@ public class DistrictCasesImportScheduledHandler extends BaseCasesImporter {
         if (historicalData) {
             startDate = LocalDate.parse(root.get("kreise").get("meta").get("historicalStats").get("start").asText());
         } else {
-            String changeTimestamp = root.get("lastUpdate").asText();
-            changeTimestamp = changeTimestamp.substring(0, 10);
-            startDate = LocalDate.now();
+            startDate = LocalDate.now().minusDays(1);
         }
         Map<String, Region> mappedRegions = regionRepository.getAllByRegionTypeMappedByCode(RegionType.DISTRICT);
 
@@ -92,8 +90,8 @@ public class DistrictCasesImportScheduledHandler extends BaseCasesImporter {
                     cases.setRegion(region);
                     cases.setDate(date);
                     cases.setConfirmed(district.get("currentStats").get("count").asInt());
-                    cases.setConfirmed(district.get("currentStats").get("recovered").asInt());
-                    cases.setConfirmed(district.get("currentStats").get("dead").asInt());
+                    cases.setRecovered(district.get("currentStats").get("recovered").asInt());
+                    cases.setDeaths( district.get("currentStats").get("dead").asInt());
                     completeCasesAndDeltaCases(cases, date, region);
                 }
             }
