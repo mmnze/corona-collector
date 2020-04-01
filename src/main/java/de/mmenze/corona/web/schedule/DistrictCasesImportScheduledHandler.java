@@ -60,6 +60,7 @@ public class DistrictCasesImportScheduledHandler extends BaseCasesImporter {
 
         for (JsonNode district : root.get("kreise").get("items")) {
             String code =  district.get("ags").asText();
+            code = (code.length() == 4) ? "0" + code : code;
             Region region = mappedRegions.get(code);
             if (region == null) {
                 // all districts are pre-loaded, hence issue a warning if not found
