@@ -79,7 +79,10 @@ public abstract class BaseCasesImporter {
     }
 
     protected void addDeltaCases(LocalDate date, Region region, Cases cases, Cases yesterdayCases) {
-        DeltaCases deltaCases = new DeltaCases();
+        addDeltaCases(date, region, cases, yesterdayCases, new DeltaCases());
+    }
+
+    protected void addDeltaCases(LocalDate date, Region region, Cases cases, Cases yesterdayCases, DeltaCases deltaCases) {
         deltaCases.setRegion(region);
         deltaCases.setBaseDate(date);
         calculateDeltaCases(deltaCases, cases, yesterdayCases);
@@ -89,7 +92,7 @@ public abstract class BaseCasesImporter {
         Region region = deltaCases.getRegion();
         LocalDate date = deltaCases.getBaseDate();
         Cases cases7d = getCasesForDateNotNull(date.minusDays(7), region);
-        Cases cases14d = getCasesForDateNotNull(date.minusDays(7), region);
+        Cases cases14d = getCasesForDateNotNull(date.minusDays(14), region);
 
         deltaCases.setIncreaseConfirmed1d(cases.getConfirmed() - yesterdayCases.getConfirmed());
         deltaCases.setIncreaseConfirmed7d(cases.getConfirmed() - cases7d.getConfirmed());
@@ -110,7 +113,7 @@ public abstract class BaseCasesImporter {
         // this is not exact, just a linear interpolation
         // we look for the first day (in the past), when the number of confirmed was less than half
         // then we linearly interpolate between this day and the following to calculate a doubling rate
-        // we ignore this for situations with less than 20 confirmed cases (99.9d is default)
+        // we ignore this for situations with less than 20 confirmed cases
         double rate = 0;
         if (cases.getConfirmed() > 20) {
             int confirmedHalf = cases.getConfirmed(), confirmedDayBefore = cases.getConfirmed();

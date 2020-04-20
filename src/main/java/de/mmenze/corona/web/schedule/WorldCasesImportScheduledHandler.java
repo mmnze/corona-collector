@@ -34,18 +34,21 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
     public void importAllWorldDataCsv() throws Exception {
         LocalDate date = LocalDate.of(2020, 1, 22);
         while (date.isBefore(LocalDate.now())) {
-            importData(date);
+            importData(date, false);
             date = date.plusDays(1);
         }
     }
 
-    @Scheduled(cron = "0 45 0 * * *")
+    @Scheduled(cron = "0 45 1 * * *")
     public void importLastWorldDataCsv()throws Exception  {
-        importData(LocalDate.now().minusDays(1));
+        importData(LocalDate.now().minusDays(1), false);
     }
 
+    public void importLastWorldDataCsv(boolean force)throws Exception  {
+        importData(LocalDate.now().minusDays(1), force);
+    }
 
-    private void importData(LocalDate date) throws Exception {
+    private void importData(LocalDate date, boolean update) throws Exception {
         log.debug("Starting to import world cases for date {}", date);
         Map<String, Region> mappedRegions = regionRepository.getAllByRegionTypeMappedByName(RegionType.COUNTRY);
         Map<String, Cases> mappedCases = new HashMap<>();
@@ -98,7 +101,8 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
             }
             yesterdaysCases.remove(e.getKey());
 
-            if (!existsCasesFor(date, region)) {
+            // TODO the force flag (and the code "below" is not fully implemented
+            if (!existsCasesFor(date, region) || update) {
                 Cases cases = e.getValue();
                 cases.setRegion(region);
                 cases.setDate(date);

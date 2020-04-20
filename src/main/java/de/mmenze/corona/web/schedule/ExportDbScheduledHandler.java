@@ -31,7 +31,7 @@ public class ExportDbScheduledHandler {
     private String dbPassword;
 
 
-    @Scheduled(cron = "0 30 1 * * *")
+    @Scheduled(cron = "0 30 2 * * *")
     public void exportDb() {
         try {
             log.debug("Exporting DB data");
