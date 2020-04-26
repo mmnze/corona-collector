@@ -32,7 +32,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
 
 
     public void importAllWorldDataCsv() throws Exception {
-        LocalDate date = LocalDate.of(2020, 1, 22);
+        LocalDate date = LocalDate.of(2020, 4, 22);
         while (date.isBefore(LocalDate.now())) {
             importData(date, false);
             date = date.plusDays(1);
@@ -101,7 +101,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
             }
             yesterdaysCases.remove(e.getKey());
 
-            // TODO the force flag (and the code "below" is not fully implemented
+            // TODO the force flag (and the code "below" is not fully implemented)
             if (!existsCasesFor(date, region) || update) {
                 Cases cases = e.getValue();
                 cases.setRegion(region);

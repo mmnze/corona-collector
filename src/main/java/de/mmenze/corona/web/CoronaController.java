@@ -16,12 +16,12 @@ public class CoronaController {
     private DistrictCasesImportScheduledHandler districtCasesImportScheduledHandler;
 
     @GetMapping("/api/import/districts")
-    public void importDistrics() throws Exception {
+    public void importDistricts() throws Exception {
         districtCasesImportScheduledHandler.importDistrictData();
     }
 
     @GetMapping("/api/import/districts/history")
-    public void importHistoryDistrics() throws Exception {
+    public void importHistoryDistricts() throws Exception {
         districtCasesImportScheduledHandler.importDistrictData(true);
     }
 
@@ -30,6 +30,10 @@ public class CoronaController {
     @Autowired
     private WorldCasesImportScheduledHandler coronaHandler;
 
+    @GetMapping("/api/import/world/all")
+    public void importWorldAll() throws Exception {
+        coronaHandler.importAllWorldDataCsv();
+    }
     @GetMapping("/api/import/world")
     public void importCsvs() throws Exception {
         coronaHandler.importLastWorldDataCsv();
