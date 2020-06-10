@@ -20,4 +20,6 @@
 
     <include file="db/changelog/20200319_added_entity_DeltaCases.xml" relativeToChangelogFile="false"/>
     <include file="db/changelog/20200319_added_entity_constraints_DeltaCases.xml" relativeToChangelogFile="false"/>
+
+    <include file="db/changelog/20200505_entity_IntensiveCareData.xml" relativeToChangelogFile="false"/>
 </databaseChangeLog>

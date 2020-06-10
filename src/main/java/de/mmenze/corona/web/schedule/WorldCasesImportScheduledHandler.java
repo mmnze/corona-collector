@@ -3,6 +3,7 @@ package de.mmenze.corona.web.schedule;
 import de.mmenze.corona.domain.Cases;
 import de.mmenze.corona.domain.Region;
 import de.mmenze.corona.domain.enums.RegionType;
+import de.mmenze.corona.util.CsvUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -39,7 +40,7 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         }
     }
 
-    @Scheduled(cron = "0 45 3 * * *")
+    @Scheduled(cron = "0 15 4 * * *")
     public void importLastWorldDataCsv()throws Exception  {
         importData(LocalDate.now().minusDays(1), false);
     }
@@ -69,9 +70,9 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         List<CSVRecord> records = parser.getRecords();
         for (CSVRecord record : records) {
             String region = record.get(countryRegion);
-            int confirmed = getIntegerFrom(record.get("Confirmed"));
-            int deaths = getIntegerFrom(record.get("Deaths"));
-            int recovered = getIntegerFrom(record.get("Recovered"));
+            int confirmed = CsvUtils.getIntegerFrom(record.get("Confirmed"));
+            int deaths = CsvUtils.getIntegerFrom(record.get("Deaths"));
+            int recovered = CsvUtils.getIntegerFrom(record.get("Recovered"));
             region = getCleanedCountryName(region);
 
             // there are few errors in the data, hence we have to ignore some countries
@@ -128,14 +129,6 @@ public class WorldCasesImportScheduledHandler extends BaseCasesImporter {
         }
 
         log.debug("Done importing world cases for date {}", date);
-    }
-
-    private int getIntegerFrom(String s) {
-        try {
-            return Integer.parseInt(s);
-        } catch (NumberFormatException e) {
-            return 0;
-        }
     }
 
     private String getCleanedCountryName(String countryName) {

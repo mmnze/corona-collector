@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <property name="autoIncrement" value="true"/>
+
+    <changeSet id="20200505-1" author="mmenze">
+        <createTable tableName="intensive_care_data">
+            <column name="id" type="bigint" autoIncrement="${autoIncrement}">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="date" type="datetime">
+                <constraints nullable="true" />
+            </column>
+
+            <column name="cases" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="cases_ventilated" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="intensive_care_units_free" type="integer">
+                <constraints nullable="false" />
+            </column>
+            <column name="intensive_care_units_occupied" type="integer">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="district_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="state_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="district_id"
+                                 baseTableName="intensive_care_data"
+                                 constraintName="fk_intensive_care_data_district_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="region"/>
+
+        <addForeignKeyConstraint baseColumnNames="state_id"
+                                 baseTableName="intensive_care_data"
+                                 constraintName="fk_intensive_care_data_state_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="region"/>
+    </changeSet>
+
+</databaseChangeLog>
