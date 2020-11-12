@@ -5,7 +5,6 @@ import de.mmenze.corona.web.service.SendMailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -15,7 +14,7 @@ import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Properties;
 
-
+// currently disabled
 @Slf4j
 @Component
 public class ExportDbScheduledHandler {
@@ -31,7 +30,7 @@ public class ExportDbScheduledHandler {
     private String dbPassword;
 
 
-    @Scheduled(cron = "0 30 4 * * *")
+    // @Scheduled(cron = "0 30 4 * * *")
     public void exportDb() {
         try {
             log.debug("Exporting DB data");
