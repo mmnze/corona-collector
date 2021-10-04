@@ -27,7 +27,7 @@ public class CountriesOfTheWorldImportScheduledHandler {
         log.debug("Starting importing country data");
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity<String> response = restTemplate.getForEntity("https://restcountries.eu/rest/v2/all", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("https//api.countrylayer.com/v2/all?access_key=0a241fd62a40c23359ac762c43972b9e", String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
         List<Region> regions = regionRepository.findAll();
@@ -41,9 +41,8 @@ public class CountriesOfTheWorldImportScheduledHandler {
             boolean foundRegion = false;
             for (JsonNode node : root) {
                 String name = node.get("name").asText();
-                String demonym = node.get("demonym").asText();
                 String alpha2 = node.get("alpha2Code").asText();
-                if (cn.equals(name) || cn.equals(demonym) || cn.equals(alpha2) ||
+                if (cn.equals(name) || cn.equals(alpha2) ||
                         isNameInAlternativeNames(cn, node) || (name.contains(cn) && cn.length() >= 6) ||
                         (name.startsWith(cn) && name.charAt(cn.length()) == ' ')) {
                     foundRegion = true;
