@@ -27,7 +27,7 @@ public class CountriesOfTheWorldImportScheduledHandler {
         log.debug("Starting importing country data");
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity<String> response = restTemplate.getForEntity("https//api.countrylayer.com/v2/all?access_key=0a241fd62a40c23359ac762c43972b9e", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("http://api.countrylayer.com/v2/all?access_key=0a241fd62a40c23359ac762c43972b9e", String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
         List<Region> regions = regionRepository.findAll();
