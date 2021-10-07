@@ -90,9 +90,15 @@ public class DistrictCasesImportScheduledHandler extends BaseCasesImporter {
                     Cases cases = new Cases();
                     cases.setRegion(region);
                     cases.setDate(date);
-                    cases.setConfirmed(district.get("currentStats").get("count").asInt(0));
-                    cases.setRecovered(district.get("currentStats").get("recovered").asInt(0));
-                    cases.setDeaths(district.get("currentStats").get("dead").asInt(0));
+                    if (district.get("currentStats").has("count")) {
+                        cases.setConfirmed(district.get("currentStats").get("count").asInt(0));
+                    }
+                    if (district.get("currentStats").has("recovered")) {
+                        cases.setRecovered(district.get("currentStats").get("recovered").asInt(0));                      
+                    }
+                    if (district.get("currentStats").has("dead")) {
+                        cases.setDeaths(district.get("currentStats").get("dead").asInt(0));
+                    }
                     completeCasesAndDeltaCases(cases, date, region);
                 }
             }
