@@ -1,14 +1,15 @@
 package de.mmenze.corona.web.schedule;
 
-import de.mmenze.corona.web.service.SendMailService;
-import lombok.extern.slf4j.Slf4j;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.task.TaskSchedulerCustomizer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import de.mmenze.corona.web.service.SendMailService;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Common error handler for all scheduled tasks in the system

@@ -1,5 +1,9 @@
 package de.mmenze.corona.web.schedule;
 
+import java.time.LocalDate;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import de.mmenze.corona.domain.Cases;
 import de.mmenze.corona.domain.DeltaCases;
 import de.mmenze.corona.domain.Region;
@@ -7,9 +11,6 @@ import de.mmenze.corona.repository.CasesRepository;
 import de.mmenze.corona.repository.DeltaCasesRepository;
 import de.mmenze.corona.repository.RegionRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.time.LocalDate;
 
 @Slf4j
 public abstract class BaseCasesImporter {

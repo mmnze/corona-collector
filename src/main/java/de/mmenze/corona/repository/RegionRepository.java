@@ -1,14 +1,14 @@
 package de.mmenze.corona.repository;
 
-import de.mmenze.corona.domain.Cases;
-import de.mmenze.corona.domain.Region;
-import de.mmenze.corona.domain.enums.RegionType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import de.mmenze.corona.domain.Region;
+import de.mmenze.corona.domain.enums.RegionType;
 
 @Repository
 public interface RegionRepository extends JpaRepository<Region, Long> {

@@ -1,19 +1,16 @@
 package de.mmenze.corona.web.task;
 
-import de.mmenze.corona.domain.Cases;
-import de.mmenze.corona.domain.DeltaCases;
-import de.mmenze.corona.domain.Region;
-import de.mmenze.corona.repository.CasesRepository;
-import de.mmenze.corona.repository.DeltaCasesRepository;
-import de.mmenze.corona.repository.RegionRepository;
-import de.mmenze.corona.web.schedule.BaseCasesImporter;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
+import de.mmenze.corona.domain.Cases;
+import de.mmenze.corona.domain.DeltaCases;
+import de.mmenze.corona.domain.Region;
+import de.mmenze.corona.web.schedule.BaseCasesImporter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Especially when importing new country date from Johns Hopkins, manual

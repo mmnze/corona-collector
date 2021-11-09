@@ -1,21 +1,5 @@
 package de.mmenze.corona.web.task;
 
-import de.mmenze.corona.domain.IntensiveCareData;
-import de.mmenze.corona.domain.Region;
-import de.mmenze.corona.domain.enums.RegionType;
-import de.mmenze.corona.repository.IntensiveCareDataRepository;
-import de.mmenze.corona.repository.RegionRepository;
-import de.mmenze.corona.util.CsvUtils;
-import de.mmenze.corona.util.UrlUtils;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -24,6 +8,22 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import de.mmenze.corona.domain.IntensiveCareData;
+import de.mmenze.corona.domain.Region;
+import de.mmenze.corona.domain.enums.RegionType;
+import de.mmenze.corona.repository.IntensiveCareDataRepository;
+import de.mmenze.corona.repository.RegionRepository;
+import de.mmenze.corona.util.CsvUtils;
+import de.mmenze.corona.util.UrlUtils;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
@@ -70,36 +70,37 @@ public class ImportIntensiveCareUnitDataTask {
 
             ReaderResult readerResult = getReader(fileCounter, date);
             fileCounter = readerResult.lastId;
-            CSVParser parser = new CSVParser(readerResult.reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withAllowMissingColumnNames());
-
-            // combine regions to countries
-            List<CSVRecord> records = parser.getRecords();
-            for (CSVRecord record : records) {
-                IntensiveCareData icd = new IntensiveCareData();
-                icd.setDistrict(districts.get(CsvUtils.getStringWithDefaultIfMissingFrom(record, "gemeindeschluessel")));
-                if (icd.getDistrict() == null) {
-                    icd.setDistrict(districts.get(CsvUtils.getStringWithDefaultIfMissingFrom(record, "kreis")));
-                }
-
-                // state is missing for some days, try to get the data from previous days
-                icd.setState(states.get(CsvUtils.getStringWithDefaultIfMissingFrom(record, "bundesland")));
-                if (icd.getState() == null) {
-                    IntensiveCareData yesterdaysData = intensiveCareDataRepository.findByDateAndDistrict(date.minusDays(1), icd.getDistrict());
-                    icd.setState(yesterdaysData.getState());
-                }
-
-                icd.setCases((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "faelle_covid_aktuell"));
-                icd.setCasesVentilated((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "faelle_covid_aktuell_beatmet"));
-                icd.setIntensiveCareUnitsFree((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "betten_frei"));
-                icd.setIntensiveCareUnitsOccupied((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "betten_belegt"));
-                icd.setDate(date);
-
-                if (!existsDataFor(date, icd.getDistrict())) {
-                    intensiveCareDataRepository.save(icd);
-                }
-                log.trace("New ICD: {}", icd);
+            
+            try (CSVParser parser = new CSVParser(readerResult.reader, CSVFormat.DEFAULT.withFirstRecordAsHeader().withAllowMissingColumnNames())) {
+	            // combine regions to countries
+	            List<CSVRecord> records = parser.getRecords();
+	            for (CSVRecord record : records) {
+	                IntensiveCareData icd = new IntensiveCareData();
+	                icd.setDistrict(districts.get(CsvUtils.getStringWithDefaultIfMissingFrom(record, "gemeindeschluessel")));
+	                if (icd.getDistrict() == null) {
+	                    icd.setDistrict(districts.get(CsvUtils.getStringWithDefaultIfMissingFrom(record, "kreis")));
+	                }
+	
+	                // state is missing for some days, try to get the data from previous days
+	                icd.setState(states.get(CsvUtils.getStringWithDefaultIfMissingFrom(record, "bundesland")));
+	                if (icd.getState() == null) {
+	                    IntensiveCareData yesterdaysData = intensiveCareDataRepository.findByDateAndDistrict(date.minusDays(1), icd.getDistrict());
+	                    icd.setState(yesterdaysData.getState());
+	                }
+	
+	                icd.setCases((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "faelle_covid_aktuell"));
+	                icd.setCasesVentilated((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "faelle_covid_aktuell_beatmet"));
+	                icd.setIntensiveCareUnitsFree((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "betten_frei"));
+	                icd.setIntensiveCareUnitsOccupied((int)CsvUtils.getDoubleWithDefaultIfMissingFrom(record, "betten_belegt"));
+	                icd.setDate(date);
+	
+	                if (!existsDataFor(date, icd.getDistrict())) {
+	                    intensiveCareDataRepository.save(icd);
+	                }
+	                log.trace("New ICD: {}", icd);
+	            }
+	            date = date.plusDays(1);
             }
-            date = date.plusDays(1);
         }
         log.debug("Finished importing intensive care data");
     }

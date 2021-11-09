@@ -1,18 +1,20 @@
 package de.mmenze.corona.web.schedule;
 
-import com.smattme.MysqlExportService;
-import de.mmenze.corona.web.service.SendMailService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import com.smattme.MysqlExportService;
+
+import de.mmenze.corona.web.service.SendMailService;
+import lombok.extern.slf4j.Slf4j;
 
 // currently disabled
 @Slf4j

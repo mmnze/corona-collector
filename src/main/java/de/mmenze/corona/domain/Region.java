@@ -1,18 +1,27 @@
 package de.mmenze.corona.domain;
 
-import de.mmenze.corona.domain.enums.RegionType;
-import lombok.Data;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import de.mmenze.corona.domain.enums.RegionType;
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "region")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Region {
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -33,9 +42,9 @@ public class Region {
     @Column(name = "lng", nullable = false)
     private double lng;
 
-    @Column(name = "code", nullable = false)
+    @Column(name = "code")
     private String code;
-    @Column(name = "continent", nullable = false)
+    @Column(name = "continent")
     private String continent;
 
     @NotNull

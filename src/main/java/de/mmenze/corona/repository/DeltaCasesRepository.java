@@ -1,11 +1,12 @@
 package de.mmenze.corona.repository;
 
-import de.mmenze.corona.domain.DeltaCases;
-import de.mmenze.corona.domain.Region;
+import java.time.LocalDate;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import de.mmenze.corona.domain.DeltaCases;
+import de.mmenze.corona.domain.Region;
 
 @Repository
 public interface DeltaCasesRepository extends JpaRepository<DeltaCases, Long> {
