@@ -39,6 +39,7 @@ public class CountriesOfTheWorldImportScheduledHandler {
                 continue;
             }
 
+            log.debug("Updating region {}", region.getName());
             String cn = region.getName();
             boolean foundRegion = false;
             for (JsonNode node : root) {
@@ -48,7 +49,7 @@ public class CountriesOfTheWorldImportScheduledHandler {
                         isNameInAlternativeNames(cn, node) || (name.contains(cn) && cn.length() >= 6) ||
                         (name.startsWith(cn) && name.charAt(cn.length()) == ' ')) {
                     foundRegion = true;
-                    region.setPopulation(node.get("population").asInt());
+                    region.setPopulation((node.get("population") != null) ? node.get("population").asInt() : 0);
                     region.setLat(node.get("latlng").get(0).asDouble());
                     region.setLng(node.get("latlng").get(1).asDouble());
                     region.setCode(node.get("alpha2Code").asText());
