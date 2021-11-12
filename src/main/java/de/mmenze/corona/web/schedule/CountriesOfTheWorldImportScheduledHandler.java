@@ -23,13 +23,26 @@ public class CountriesOfTheWorldImportScheduledHandler {
     @Autowired
     private RegionRepository regionRepository;
 
+    // countrylayer.com reduced the data contained in the free package, hence API usage changed to restcountries.com
+    // private static String API_URL = "http://api.countrylayer.com/v2/all?access_key=0a241fd62a40c23359ac762c43972b9e";
+    private static String API_URL = "https://restcountries.com/v3.1/all";
 
+    /* 
+     * API property names (countrylayer V2, restcountries V3.1)
+     *  name: 			get("name").asText() 				get("name").get("common").asText()
+     *  2-letter code: 	get("alpha2Code").asText() 			get("cca2").asText()
+     *  population: 	get("population").asInt()			get("population").asInt()
+     *  latlng:			get("latlng").get(0/1).asDouble()	get("latlng").get(0/1).asDouble()
+     *  region: 		get("region").asText()				get("region").asText()
+     */
+    
+    
     @Scheduled(cron = "0 0 2 * * *")
     public void importCountryData() throws JsonProcessingException {
         log.debug("Starting importing country data");
         RestTemplate restTemplate = new RestTemplate();
         ObjectMapper mapper = new ObjectMapper();
-        ResponseEntity<String> response = restTemplate.getForEntity("http://api.countrylayer.com/v2/all?access_key=0a241fd62a40c23359ac762c43972b9e", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(API_URL, String.class);
         JsonNode root = mapper.readTree(response.getBody());
 
         List<Region> regions = regionRepository.findAll();
@@ -43,13 +56,13 @@ public class CountriesOfTheWorldImportScheduledHandler {
             String cn = region.getName();
             boolean foundRegion = false;
             for (JsonNode node : root) {
-                String name = node.get("name").asText();
-                String alpha2 = node.get("alpha2Code").asText();
+                String name = node.get("name").get("common").asText();
+                String alpha2 = node.get("cca2").asText(); 
                 if (cn.equals(name) || cn.equals(alpha2) ||
                         isNameInAlternativeNames(cn, node) || (name.contains(cn) && cn.length() >= 6) ||
                         (name.startsWith(cn) && name.charAt(cn.length()) == ' ')) {
                     foundRegion = true;
-                    region.setPopulation((node.get("population") != null) ? node.get("population").asInt() : 0);
+                    region.setPopulation(node.get("population").asInt());
                     region.setLat(node.get("latlng").get(0).asDouble());
                     region.setLng(node.get("latlng").get(1).asDouble());
                     region.setCode(node.get("alpha2Code").asText());
