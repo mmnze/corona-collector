@@ -65,7 +65,7 @@ public class CountriesOfTheWorldImportScheduledHandler {
                     region.setPopulation(node.get("population").asInt());
                     region.setLat(node.get("latlng").get(0).asDouble());
                     region.setLng(node.get("latlng").get(1).asDouble());
-                    region.setCode(node.get("alpha2Code").asText());
+                    region.setCode(node.get("cca2").asText());
                     region.setContinent(node.get("region").asText());
                     regionRepository.save(region);
                     log.debug("Updated region {}", region.getName());
